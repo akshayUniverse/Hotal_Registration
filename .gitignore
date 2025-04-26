@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+client/node_modules/
+server/node_modules/
+
+# Build directories
+client/build/
+server/build/
+
+# Misc
+.DS_Store
+.env 
