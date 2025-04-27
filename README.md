@@ -1,54 +1,93 @@
-# Hotel Room Reservation System
+Akshay Bookings — Hotel Room Reservation System
 
-This project is a full-stack application for managing hotel room reservations. It includes both a frontend and a backend component.
+Live Demo: https://akshaybookings.vercel.app
 
-## Features
+🎉 Project Overview
 
-- **Room Booking**: Users can book available rooms.
-- **Best Room Selection**: The system can suggest the best available rooms based on user input.
-- **Random Booking**: For testing purposes, users can randomly book a set number of rooms.
-- **Reset Bookings**: Users can reset all bookings to start fresh.
+Akshay Bookings is a dynamic hotel room reservation system built with React and Node.js/Express. It allows guests to easily book up to 5 rooms at a time, visualizes occupancy, and optimally assigns rooms to minimize travel time between selected rooms. The app also supports random occupancy generation and a full reset, all with a clean, responsive UI.
 
-## Frontend
 
-- Built with React, providing a responsive and interactive user interface.
-- Allows users to view room availability, select rooms, and see booking summaries.
+✨ Key Features
 
-## Backend
+Optimal Room Assignment: Prioritizes same-floor bookings; falls back to cross-floor groups that minimize combined horizontal and vertical travel time.
 
-- Built with Node.js and Express, handling API requests and managing room data.
-- Provides endpoints for room management, booking, and resetting.
+Interactive Visualization: Displays floors and rooms in a grid; color codes available, booked, and newly assigned rooms.
 
-## Getting Started
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/akshayUniverse/Hotal_Registration.git
-   ```
+User Controls:
 
-2. **Install dependencies**:
-   ```bash
-   cd client
-   npm install
-   cd ../server
-   npm install
-   ```
+Enter number of rooms to book (1–5)
 
-3. **Run the application**:
-   - Start the server:
-     ```bash
-     cd server
-     node index.js
-     ```
-   - Start the client:
-     ```bash
-     cd client
-     npm start
-     ```
+Book: Finds and marks best rooms
 
-4. **Access the application**:
-   - Open your browser and go to `http://localhost:3002` to view the client application.
+Randomize: Generates random occupied rooms for testing
 
-## License
+Reset: Clears all bookings
 
-This project is licensed under the MIT License. 
+Responsive Design: Works seamlessly on desktop and mobile.
+
+
+🚀 Technology Stack
+
+Frontend: React, Vite, Axios, Tailwind CSS
+
+Backend: Node.js, Express, CORS
+
+Hosting: Render (API) & Vercel (UI)
+
+Version Control: GitHub
+
+
+🏗️ Installation & Local Setup
+
+Clone the repository:
+
+git clone https://github.com/akshayUniverse/Hotal_Registration.git
+cd Hotal_Registration
+
+Backend:
+
+cd server
+npm install
+node index.js  # API runs on http://localhost:4000
+
+Frontend:
+
+cd client
+npm install
+npm run dev    # UI runs on http://localhost:5173
+
+
+📦 Deployment
+
+Backend: Hosted on Render — https://hotel-booking-backend-3e0x.onrender.com
+
+Frontend: Hosted on Vercel — https://akshaybookings.vercel.app
+
+
+🔗 API Endpoints
+
+GET /api/rooms: Fetch the current room inventory.
+
+POST /api/book: Book optimal rooms. Payload: { k: number }.
+
+POST /api/random: Generate random room occupancy.
+
+POST /api/reset: Reset all bookings.
+
+
+🎨 Screenshots
+
+https://docs.google.com/document/d/1eOndS5oAPeblrpo452GAx1VwSbEmVUuInefQnsIp5mQ/edit?usp=sharing
+
+
+📄 License & Contact
+
+Built by Akshay Karada (MCA ’25). Feel free to reach out:
+
+Email: akshaykarada72.o@gmail.com
+
+LinkedIn: https://linkedin.com/in/akshaykarada
+
+GitHub: https://github.com/akshayUniverse
+
