@@ -11,6 +11,9 @@ router.get('/rooms/best', bookingController.getBestRooms);
 // POST /api/rooms/book - Book specific rooms
 router.post('/rooms/book', bookingController.bookRooms);
 
+// Enable unbooking of rooms
+router.post('/rooms/unbook', bookingController.unbookRooms);
+
 // POST /api/reset - Reset all bookings
 router.post('/reset', bookingController.resetBookings);
 

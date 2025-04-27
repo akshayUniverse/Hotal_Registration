@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import RoomGrid from '../components/RoomGrid';
-import { getAllRooms, getBestRooms, bookRooms, resetBookings, randomBookings } from '../api/booking';
+import { getAllRooms, getBestRooms, bookRooms, resetBookings, randomBookings, unbookRooms } from '../api/booking';
 
 const styles = {
   container: {
@@ -208,46 +208,57 @@ const BookingPage = () => {
   // Calculate total travel time for selected rooms
   const calculateTotalTravelTime = (selectedRoomIds) => {
     if (selectedRoomIds.length <= 1) return 0;
-    
-    const selectedRoomObjects = selectedRoomIds.map(id => 
-      rooms.find(room => room.id === id)
-    );
 
-    let minTotalTime = Infinity;
-    
-    // Try each room as starting point
-    for (let startIdx = 0; startIdx < selectedRoomObjects.length; startIdx++) {
-      let totalTime = 0;
-      const startRoom = selectedRoomObjects[startIdx];
-      
-      // Calculate time from start room to each other room
-      for (let i = 0; i < selectedRoomObjects.length; i++) {
-        if (i !== startIdx) {
-          totalTime += calculateTravelTime(startRoom, selectedRoomObjects[i]);
-        }
-      }
-      
-      minTotalTime = Math.min(minTotalTime, totalTime);
+    // Map IDs to room objects and sort by floor then index
+    const selectedRoomObjects = selectedRoomIds.map(id => rooms.find(room => room.id === id));
+    const sortedRooms = [...selectedRoomObjects].sort((a, b) => {
+      if (a.floor !== b.floor) return a.floor - b.floor;
+      return parseInt(a.index) - parseInt(b.index);
+    });
+
+    // Sum travel times between adjacent rooms
+    let totalTime = 0;
+    for (let i = 0; i < sortedRooms.length - 1; i++) {
+      totalTime += calculateTravelTime(sortedRooms[i], sortedRooms[i + 1]);
     }
-    
-    return minTotalTime;
+
+    return totalTime;
   };
 
-  const handleRoomClick = (room) => {
+  // Handle clicking on a room: unbook if already booked, otherwise toggle selection
+  const handleRoomClick = async (room) => {
+    if (room.booked) {
+      // Unbook this room
+      try {
+        setLoading(true);
+        await unbookRooms([room.id]);
+        await fetchRooms();
+        setSelectedRooms([]);
+        setMessage(`Room ${room.id} has been unbooked`);
+        setTimeout(() => setMessage(''), 3000);
+      } catch (error) {
+        setError('Failed to unbook room. Please try again.');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    // Toggle selection for available rooms
     setSelectedRooms(prev => {
       const newSelection = prev.includes(room.id)
         ? prev.filter(id => id !== room.id)
         : prev.length >= MAX_ROOMS_PER_BOOKING
           ? (setError(`You can only book up to ${MAX_ROOMS_PER_BOOKING} rooms at a time.`), prev)
           : [...prev, room.id];
-      
+
       // Calculate and update travel time for the new selection
       if (newSelection.length > 1) {
         setTravelTime(calculateTotalTravelTime(newSelection));
       } else {
         setTravelTime(null);
       }
-      
+
       return newSelection;
     });
   };
@@ -271,8 +282,14 @@ const BookingPage = () => {
   const handleRandomClick = async () => {
     try {
       setLoading(true);
-      // Random booking should not exceed MAX_ROOMS_PER_BOOKING
-      const count = Math.min(MAX_ROOMS_PER_BOOKING, rooms.filter(r => !r.booked).length);
+      // Randomly book between 5 and 30 rooms, up to available rooms
+      const availableRoomsCount = rooms.filter(r => !r.booked).length;
+      const minRooms = 5;
+      const maxRooms = 30;
+      const count = Math.min(
+        Math.floor(Math.random() * (maxRooms - minRooms + 1)) + minRooms,
+        availableRoomsCount
+      );
       await randomBookings(count);
       await fetchRooms();
       setSelectedRooms([]);
@@ -318,6 +335,12 @@ const BookingPage = () => {
         setError(`Please enter a number between 1 and ${MAX_ROOMS_PER_BOOKING}`);
         return;
       }
+      // Check if enough rooms are available before requesting
+      const availableCount = rooms.filter(r => !r.booked).length;
+      if (availableCount < roomCount) {
+        setError('Not enough available rooms');
+        return;
+      }
 
       setLoading(true);
       const bestRooms = await getBestRooms(roomCount);
@@ -326,7 +349,13 @@ const BookingPage = () => {
       setMessage(`Found ${bestRooms.length} best rooms with minimum travel time of ${bestRooms[0]?.travelTime} minutes`);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setError('Failed to find best rooms. Please try again.');
+      // Show specific message if it's an insufficient-rooms error
+      const errMsg = error.message || '';
+      if (errMsg.toLowerCase().includes('not enough')) {
+        setError('Not enough available rooms');
+      } else {
+        setError('Failed to find best rooms. Please try again.');
+      }
       console.error(error);
     } finally {
       setLoading(false);

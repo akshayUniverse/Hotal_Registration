@@ -204,23 +204,11 @@ const bookingController = {
      * Get all rooms and their status
      */
     getAllRooms: (req, res) => {
-        const rooms = generateRooms().map(room => {
-            // For testing: Mark specific rooms as booked
-            const isBooked = (
-                // Floor 1: rooms 3-10 are booked
-                (room.floor === 1 && parseInt(room.index) >= 3) ||
-                // Floor 2: rooms 3-5 and 9-10 are booked
-                (room.floor === 2 && (
-                    (parseInt(room.index) >= 3 && parseInt(room.index) <= 5) ||
-                    parseInt(room.index) >= 9
-                ))
-            );
-            
-            return {
-                ...room,
-                booked: isBooked || bookedRoomIds.has(room.id)
-            };
-        });
+        // Use only dynamic bookings from bookedRoomIds
+        const rooms = generateRooms().map(room => ({
+            ...room,
+            booked: bookedRoomIds.has(room.id)
+        }));
         res.json(rooms);
     },
 
@@ -276,6 +264,34 @@ const bookingController = {
         }));
 
         res.json(bookedRooms);
+    },
+
+    /**
+     * Unbook specific rooms
+     */
+    unbookRooms: (req, res) => {
+        const { roomIds } = req.body;
+        if (!Array.isArray(roomIds) || roomIds.length === 0) {
+            return res.status(400).json({ error: 'Invalid room IDs provided' });
+        }
+
+        const rooms = generateRooms();
+        const roomsToUnbook = rooms.filter(room => roomIds.includes(room.id));
+
+        // Check if all requested rooms exist
+        if (roomsToUnbook.length !== roomIds.length) {
+            return res.status(404).json({ error: 'One or more rooms not found' });
+        }
+
+        // Unbook the rooms
+        roomIds.forEach(id => bookedRoomIds.delete(id));
+
+        const unbookedRooms = roomsToUnbook.map(room => ({
+            ...room,
+            booked: false
+        }));
+
+        res.json(unbookedRooms);
     },
 
     /**

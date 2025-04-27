@@ -78,10 +78,25 @@ export const randomBookings = async (count = 5) => {
     }
 };
 
+/**
+ * Unbook specific rooms
+ * @param {Array<string>} roomIds - Array of room IDs to unbook
+ * @returns {Promise<Array<{id: string, floor: number, index: string, booked: boolean}>>}
+ */
+export const unbookRooms = async (roomIds) => {
+    try {
+        const response = await api.post('/rooms/unbook', { roomIds });
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.error || 'Failed to unbook rooms');
+    }
+};
+
 export default {
     getAllRooms,
     getBestRooms,
     bookRooms,
     resetBookings,
-    randomBookings
+    randomBookings,
+    unbookRooms
 }; 

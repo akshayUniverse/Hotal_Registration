@@ -67,7 +67,7 @@ const styles = {
     booked: {
         backgroundColor: '#f44336',
         color: 'white',
-        cursor: 'not-allowed',
+        cursor: 'pointer',
     },
     selected: {
         backgroundColor: '#2196F3',
@@ -144,7 +144,7 @@ const RoomGrid = ({ rooms, selectedRooms = [], onRoomClick }) => {
                                 <div
                                     key={room.id}
                                     style={getRoomStyle(room)}
-                                    onClick={() => !room.booked && onRoomClick(room)}
+                                    onClick={() => onRoomClick(room)}
                                     title={`Room ${room.id}`}
                                     aria-label={`Room ${room.id}, ${room.booked ? 'booked' : 'available'}`}
                                 >
