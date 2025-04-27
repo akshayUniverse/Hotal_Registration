@@ -1,162 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import RoomGrid from '../components/RoomGrid';
 import { getAllRooms, getBestRooms, bookRooms, resetBookings, randomBookings, unbookRooms } from '../api/booking';
-
-const styles = {
-  container: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '20px',
-    backgroundColor: '#f0f0f0',
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  header: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: '30px',
-  },
-  title: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#333',
-  },
-  controls: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '20px',
-    marginBottom: '40px',
-    flexWrap: 'wrap',
-    padding: '0 20px',
-  },
-  controlItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    minWidth: '200px',
-  },
-  inputWrapper: {
-    border: '1px solid #333',
-    padding: '15px 30px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    justifyContent: 'center',
-    backgroundColor: '#ddd',
-    borderRadius: '4px',
-    width: '100%',
-    boxSizing: 'border-box',
-  },
-  button: {
-    padding: '15px 30px',
-    backgroundColor: '#ddd',
-    color: '#333',
-    border: '1px solid #333',
-    cursor: 'pointer',
-    fontWeight: 'normal',
-    minWidth: '200px',
-    textAlign: 'center',
-    borderRadius: '4px',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      backgroundColor: '#ccc',
-    },
-  },
-  input: {
-    padding: '8px 12px',
-    width: '80px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    background: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: '16px',
-  },
-  messageContainer: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '10px',
-    marginBottom: '20px',
-  },
-  messageBox: {
-    padding: '15px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    width: '100%',
-    maxWidth: '600px',
-    textAlign: 'center',
-    boxSizing: 'border-box',
-  },
-  successMessage: {
-    backgroundColor: '#dff0d8',
-    color: '#3c763d',
-    border: '1px solid #d6e9c6',
-  },
-  errorMessage: {
-    backgroundColor: '#f2dede',
-    color: '#a94442',
-    border: '1px solid #ebccd1',
-  },
-  infoMessage: {
-    backgroundColor: '#e3f2fd',
-    color: '#1976d2',
-    border: '1px solid #bbdefb',
-  },
-  loadingMessage: {
-    textAlign: 'center',
-    margin: '20px 0',
-    color: '#666',
-  },
-  gridContainer: {
-    width: '100%',
-    maxWidth: '900px',
-    margin: '0 auto',
-    padding: '20px',
-    boxSizing: 'border-box',
-  },
-  bookSelectedButton: {
-    marginTop: '20px',
-    padding: '15px 30px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    transition: 'background-color 0.3s ease',
-    '&:hover': {
-      backgroundColor: '#45a049',
-    },
-  },
-  '@media (max-width: 768px)': {
-    controls: {
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '15px',
-    },
-    controlItem: {
-      width: '100%',
-      maxWidth: '300px',
-    },
-    button: {
-      width: '100%',
-    },
-    title: {
-      fontSize: '24px',
-    },
-    messageBox: {
-      margin: '10px',
-    },
-  },
-};
+import '../styles/BookingPage.css';
 
 const MAX_ROOMS_PER_BOOKING = 5;
 
@@ -363,14 +208,14 @@ const BookingPage = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h1 style={styles.title}>Hotel Room Reservation System</h1>
+    <div className="container">
+      <div className="header">
+        <h1 className="title">Hotel Room Reservation System</h1>
       </div>
 
-      <div style={styles.controls}>
-        <div style={styles.controlItem}>
-          <div style={styles.inputWrapper}>
+      <div className="controls">
+        <div className="control-item">
+          <div className="input-wrapper">
             No of Rooms
             <input 
               type="number" 
@@ -378,32 +223,32 @@ const BookingPage = () => {
               max={MAX_ROOMS_PER_BOOKING} 
               value={roomCount} 
               onChange={(e) => setRoomCount(Math.min(MAX_ROOMS_PER_BOOKING, Math.max(1, parseInt(e.target.value) || 1)))}
-              style={styles.input}
+              className="input"
             />
           </div>
         </div>
         
-        <div style={styles.controlItem}>
+        <div className="control-item">
           <button 
-            style={styles.button} 
+            className="button" 
             onClick={handleFindBestRooms}
           >
             Find Best Rooms
           </button>
         </div>
         
-        <div style={styles.controlItem}>
+        <div className="control-item">
           <button 
-            style={styles.button} 
+            className="button" 
             onClick={handleResetClick}
           >
             Reset
           </button>
         </div>
         
-        <div style={styles.controlItem}>
+        <div className="control-item">
           <button 
-            style={styles.button} 
+            className="button" 
             onClick={handleRandomClick}
           >
             Random
@@ -411,30 +256,30 @@ const BookingPage = () => {
         </div>
       </div>
 
-      <div style={styles.messageContainer}>
+      <div className="message-container">
         {travelTime !== null && (
-          <div style={{...styles.messageBox, ...styles.infoMessage}}>
+          <div className="message-box info-message">
             Total travel time between selected rooms: {travelTime} minutes
           </div>
         )}
 
         {message && (
-          <div style={{...styles.messageBox, ...styles.successMessage}}>
+          <div className="message-box success-message">
             {message}
           </div>
         )}
         
         {error && (
-          <div style={{...styles.messageBox, ...styles.errorMessage}}>
+          <div className="message-box error-message">
             {error}
           </div>
         )}
       </div>
       
       {loading ? (
-        <div style={styles.loadingMessage}>Loading rooms...</div>
+        <div className="loading-message">Loading rooms...</div>
       ) : (
-        <div style={styles.gridContainer}>
+        <div className="grid-container">
           <RoomGrid 
             rooms={rooms} 
             selectedRooms={selectedRooms}
@@ -444,7 +289,7 @@ const BookingPage = () => {
           {selectedRooms.length > 0 && (
             <div style={{textAlign: 'center'}}>
               <button 
-                style={styles.bookSelectedButton}
+                className="book-selected-button"
                 onClick={handleBookClick}
               >
                 Book Selected ({selectedRooms.length})
