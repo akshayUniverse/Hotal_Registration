@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// Use environment variable for API URL (React App uses REACT_APP_API_URL)
+// Use environment variable for API URL or default to deployed backend
 const API_BASE_URL = process.env.REACT_APP_API_URL
   ? `${process.env.REACT_APP_API_URL}/api`
-  : 'http://localhost:4000/api';
+  : 'https://hotel-booking-backend-3e0x.onrender.com/api';
 
 // Create axios instance with default config
 const api = axios.create({
